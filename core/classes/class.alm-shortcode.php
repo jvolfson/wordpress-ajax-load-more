@@ -359,6 +359,8 @@ if( !class_exists('ALM_SHORTCODE') ):
                $args = apply_filters('alm_modify_query_args', $args, $slug); // ALM Core Filter Hook
                
       			$alm_preload_query = new WP_Query($args);
+               $alm_preload_query = apply_filters('alm_modify_query', $alm_preload_query, $args);
+
       			$alm_total_posts = $alm_preload_query->found_posts - $offset;
                $output = '';
                $noscript = '';      			

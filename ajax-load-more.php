@@ -678,6 +678,10 @@ if( !class_exists('AjaxLoadMore') ):
 	   	 */
    		$alm_query = new WP_Query( $args ); // WP_Query()	
    		
+         /*
+          * Filter to modify query after it has been executed
+          */
+         $alm_query = apply_filters('alm_modify_query', $alm_query, $args);
    		
    		// If preload, update our loop count and total posts
          if(has_action('alm_preload_installed') && $preloaded === 'true'){ 
