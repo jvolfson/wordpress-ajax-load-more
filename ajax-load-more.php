@@ -7,15 +7,15 @@ Text Domain: ajax-load-more
 Author: Darren Cooney
 Twitter: @KaptonKaos
 Author URI: http://connekthq.com
-Version: 2.13.0.1
+Version: 2.13.1
 License: GPL
 Copyright: Darren Cooney & Connekt Media
-
 */	  
 
+
    		
-define('ALM_VERSION', '2.13.0.1');
-define('ALM_RELEASE', 'November 10, 2016');
+define('ALM_VERSION', '2.13.1');
+define('ALM_RELEASE', 'December 5, 2016');
 define('ALM_STORE_URL', 'https://connekthq.com');	
 
 
@@ -386,6 +386,7 @@ if( !class_exists('AjaxLoadMore') ):
                $post_status = 'publish';
             }
          }
+         
    		
    		
    		// Page Parameters
@@ -623,6 +624,7 @@ if( !class_exists('AjaxLoadMore') ):
    		/*
 	   	 *	alm_prev_post_args
 	   	 *
+	   	 * Previous Post Add-on hook
 	   	 * Hijack $args and and return previous post only $args
 	   	 *
 	   	 * @return $args;
@@ -667,6 +669,7 @@ if( !class_exists('AjaxLoadMore') ):
           * Filter to modify query after it has been executed
           */
          $alm_query = apply_filters('alm_modify_query', $alm_query, $args);
+
    		
    		// If preload, update our loop count and total posts
          if(has_action('alm_preload_installed') && $preloaded === 'true'){ 
@@ -681,7 +684,15 @@ if( !class_exists('AjaxLoadMore') ):
          }
          
          
-         // Create cache directory + meta .txt file
+         
+         /*
+	   	 *	alm_cache_create_dir
+	   	 *
+	   	 * Cache Add-on hook
+	   	 * Create cache directory + meta .txt file
+	   	 *
+	   	 * @return null
+	   	 */
          if(!empty($cache_id) && has_action('alm_cache_create_dir')){    
             apply_filters('alm_cache_create_dir', $cache_id, $canonical_url);            
             $page_cache = ''; // set our page cache variable
@@ -745,10 +756,17 @@ if( !class_exists('AjaxLoadMore') ):
 	            
 	            $data = ob_get_clean();
                
-   	         // If Cache is enabled and seo_start_page is 1 (meaning, a user has not requested /page/12/)
-   	         // - Only create cached files if the user visits pages in order 1, 2, 3 etc.   	         
-   	         if(!empty($cache_id) && has_action('alm_cache_installed') && $seo_start_page <= 1){ 
-   	            apply_filters('alm_cache_file', $cache_id, $page, $data);
+               
+               /*
+      	   	 *	alm_cache_file
+      	   	 *
+      	   	 * Cache Add-on hook
+      	   	 * If Cache is enabled, check the cache file
+      	   	 *
+      	   	 * @return null
+      	   	 */
+   	         if(!empty($cache_id) && has_action('alm_cache_installed')){ 
+   	            apply_filters('alm_cache_file', $cache_id, $page, $seo_start_page, $data, $preloaded);
    	         }   	         
    	         
    	         
