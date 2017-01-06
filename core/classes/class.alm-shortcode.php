@@ -28,7 +28,6 @@ if( !class_exists('ALM_SHORTCODE') ):
    	 */
    	 
       public static function alm_render_shortcode($atts){
-         
          global $post;
                   
    		$options = get_option( 'alm_settings' );  		
@@ -89,6 +88,8 @@ if( !class_exists('ALM_SHORTCODE') ):
    			'meta_compare' => '',
    			'meta_relation' => '',
    			'meta_type' => '',
+            'date_query' => '',
+            'date_query_after' => '',
    			'year' => '',
    			'month' => '',
    			'day' => '',
@@ -98,6 +99,7 @@ if( !class_exists('ALM_SHORTCODE') ):
    			'post_status' => '',					
    			'order' => 'DESC',
    			'orderby' => 'date',
+            'order_set' => 'false',
    			'post__in' => '',
    			'post__not_in' => '',
    			'exclude' => '',
@@ -119,8 +121,10 @@ if( !class_exists('ALM_SHORTCODE') ):
    			'css_classes' => '',	
    			'id' => '',	
    			'primary' => false	
-   		), $atts));   		   
-   		
+   		), $atts));
+   		if(!empty($date_query_after)){
+            $date_query = array( array('after' => $date_query_after) );
+         }
    		
    		// Enqueue core Ajax Load More JS   	     	
       	wp_enqueue_script( 'ajax-load-more' );	       			
@@ -335,6 +339,7 @@ if( !class_exists('ALM_SHORTCODE') ):
          		'meta_compare'       => $meta_compare,
                'meta_relation'      => $meta_relation,
                'meta_type'          => $meta_type,
+               'date_query'         => $date_query,
          		'year'               => $year,
          		'month'              => $month,
          		'day'                => $day,
@@ -346,6 +351,7 @@ if( !class_exists('ALM_SHORTCODE') ):
          		'post_status'        => $post_status,
          		'order'              => $order,
          		'orderby'            => $orderby,
+               'order_set'          => $order_set,
          		'exclude'            => $exclude,
          		'offset'             => $preload_offset,      		
          		'posts_per_page'     => $preloaded_amount,  
@@ -368,7 +374,6 @@ if( !class_exists('ALM_SHORTCODE') ):
                $args = apply_filters('alm_preload_args', $preloaded_arr); // Create preloaded $args     
 					
 					
-					
 					/*
 			   	 *	alm_modify_query_args
 			   	 *
@@ -388,7 +393,6 @@ if( !class_exists('ALM_SHORTCODE') ):
       	   	 * @return $args;
       	   	 */  
                $args = apply_filters('alm_query_args_'.$id, $args); // ALM Core Filter Hook  
-               
                
       			$alm_preload_query = new WP_Query($args);
                $alm_preload_query = apply_filters('alm_modify_query', $alm_preload_query, $args);
@@ -606,6 +610,7 @@ if( !class_exists('ALM_SHORTCODE') ):
    		$ajaxloadmore .= ' data-meta-compare="'.$meta_compare.'"';
    		$ajaxloadmore .= ' data-meta-relation="'.$meta_relation.'"';
    		$ajaxloadmore .= ' data-meta-type="'.$meta_type.'"';
+         $ajaxloadmore .= ' data-date-query-after="'.$date_query_after.'"';
    		$ajaxloadmore .= ' data-year="'.$year.'"';
    		$ajaxloadmore .= ' data-month="'.$month.'"';
    		$ajaxloadmore .= ' data-day="'.$day.'"';

@@ -348,6 +348,7 @@ if( !class_exists('AjaxLoadMore') ):
    		$year = (isset($_GET['year'])) ? $_GET['year'] : '';
    		$month = (isset($_GET['month'])) ? $_GET['month'] : '';
    		$day = (isset($_GET['day'])) ? $_GET['day'] : '';
+         $date_query_after = (isset($_GET['date_query_after'])) ? $_GET['date_query_after'] : '';
    		
    		// Custom Fields
    		$meta_key = (isset($_GET['meta_key'])) ? $_GET['meta_key'] : '';
@@ -370,6 +371,7 @@ if( !class_exists('AjaxLoadMore') ):
    		// Ordering
    		$order = (isset($_GET['order'])) ? $_GET['order'] : 'DESC';
    		$orderby = (isset($_GET['orderby'])) ? $_GET['orderby'] : 'date';
+         $order_set = (isset($_GET['orderby'])) ? 'true' : 'false';
    		
    		// Include, Exclude, Offset, Status
    		$post__in = (isset($_GET['post__in'])) ? $_GET['post__in'] : '';
@@ -439,6 +441,7 @@ if( !class_exists('AjaxLoadMore') ):
    			'offset'                   => $offset + ($posts_per_page*$page),
    			'order'                    => $order,
    			'orderby'                  => $orderby,	
+            'order_set'                => $order_set,
    			'post_status'              => $post_status,
    			'ignore_sticky_posts'      => false,
    			'paged'                    => $paged,
@@ -507,13 +510,16 @@ if( !class_exists('AjaxLoadMore') ):
    	   // Date (not using date_query as there was issue with year/month archives)
    		if(!empty($year)){
       		$args['year'] = $year;
-   	   } 
+   	   }
    	   if(!empty($month)){
       		$args['monthnum'] = $month;
-   	   }  
+   	   }
    	   if(!empty($day)){
       		$args['day'] = $day;
-   	   } 
+   	   }
+         if(!empty($date_query_after)){
+            $args['date_query'] = array( array('after' => $date_query_after) );
+         }
    	    
    	   // Meta Query
    		if(!empty($meta_key) && !empty($meta_value) || !empty($meta_key) && $meta_compare !== "IN"){
