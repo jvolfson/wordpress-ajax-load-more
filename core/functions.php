@@ -427,7 +427,11 @@ function alm_get_canonical_url(){
    // post_type
    elseif(is_post_type_archive()){
       $post_type_archive = get_post_type();
-      $canonicalURL = get_post_type_archive_link($post_type_archive);            
+      $canonicalURL = get_post_type_archive_link($post_type_archive);
+   }
+   // Search
+   elseif(is_search()){
+      $canonicalURL = get_search_link(get_search_query());
    }       
    else{            
       $canonicalURL = get_permalink();
