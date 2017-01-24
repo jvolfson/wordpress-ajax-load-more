@@ -412,12 +412,12 @@ function alm_get_canonical_url(){
    elseif(is_tag()){
       $cur_tag_id = get_query_var('tag_id');
       $canonicalURL = get_tag_link($cur_tag_id);
-   } 
+   }
    // Author
    elseif(is_author()){
       $author_id = get_the_author_meta('ID');
       $canonicalURL = get_author_posts_url($author_id);
-   } 
+   }
    // Taxonomy
    elseif(is_tax()){
       $tax_term = get_term_by('slug', get_query_var('term'), get_query_var('taxonomy' ));
@@ -432,10 +432,10 @@ function alm_get_canonical_url(){
    // Search
    elseif(is_search()){
       $canonicalURL = get_search_link(get_search_query());
-   }       
+   }
    else{            
       $canonicalURL = get_permalink();
-   } 
+   }
 	
 	return $canonicalURL;
 }
